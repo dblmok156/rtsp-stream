@@ -15,11 +15,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Roverr/rtsp-stream/core/auth"
-	"github.com/Roverr/rtsp-stream/core/blacklist"
-	"github.com/Roverr/rtsp-stream/core/config"
+	"github.com/dblmok156/rtsp-stream/core/auth"
+	"github.com/dblmok156/rtsp-stream/core/blacklist"
+	"github.com/dblmok156/rtsp-stream/core/config"
+	"github.com/dblmok156/streamer"
 	"github.com/julienschmidt/httprouter"
-	"github.com/riltech/streamer"
 	"github.com/sirupsen/logrus"
 )
 
@@ -102,12 +102,41 @@ func NewController(spec *config.Specification, fileServer http.Handler) *Control
 	if spec.BlacklistEnabled {
 		ctrl.blacklist = blacklist.NewList(spec.BlacklistTime, spec.BlacklistLimit)
 	}
+	//fmt.Print(time.After(spec.CleanupTime))
+	//fmt.Fprintln(os.Stdout, time.After(spec.CleanupTime))
+	//fmt.Printf("Направление: %s Маршрут: %s\n",1, 2)
+
 	if spec.CleanupEnabled {
 		go func() {
 			for {
 				<-time.After(spec.CleanupTime)
 				ctrl.stopInactiveStreams()
 			}
+		}()
+	}
+
+	if spec.ProcessCheckEnabled {
+		go func() {
+			// active streams
+			interval := time.Tick(spec.ProcessCheckTime)
+			for range interval {
+				for _, stream := range ctrl.streams {
+					indexPath := fmt.Sprintf("%s/index.m3u8", stream.StorePath)
+					stat, err := os.Stat(indexPath)
+					if err != nil {
+						logrus.Error(err)
+						return
+					}
+					modTime := stat.ModTime().Unix()
+					updModTime := time.Now().Unix() - modTime
+
+					if updModTime > 60 {
+						logrus.Infof("%s restarted processing | StartHandler", stream.OriginalURI)
+						stream.Restart().Wait()
+					}
+				}
+			}
+
 		}()
 	}
 

@@ -75,7 +75,7 @@
 
 [[projects]]
   digest = "1:5d060f3baf84b37ebb019568be98bb0b7631ec865c87a92f53c3cf7e9a91c779"
-  name = "github.com/riltech/streamer"
+  name = "github.com/dblmok156/streamer"
   packages = ["."]
   pruneopts = "UT"
   revision = "b4a91bd3548cc5b34477b76aa21db8569c287331"
@@ -128,7 +128,7 @@
     "github.com/dgrijalva/jwt-go",
     "github.com/julienschmidt/httprouter",
     "github.com/kelseyhightower/envconfig",
-    "github.com/riltech/streamer",
+    "github.com/dblmok156/streamer",
     "github.com/rs/cors",
     "github.com/sirupsen/logrus",
     "github.com/stretchr/testify/assert",

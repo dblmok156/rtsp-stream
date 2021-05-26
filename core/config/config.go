@@ -39,24 +39,26 @@ type ProcessLogging struct {
 
 // Blacklist describes configuration for the blacklisting functionality
 type Blacklist struct {
-	BlacklistEnabled bool          `envconfig:"BLACKLIST_ENABLED" default:"true"` // How many times a stream has to be wrong before blacklisting
-	BlacklistLimit   int           `envconfig:"BLACKLIST_LIMIT" default:"25"`     // How many times a stream has to be wrong before blacklisting
-	BlacklistTime    time.Duration `envconfig:"BLACKLIST_TIME" default:"1h"`      // Time period for blacklist to remove lements
+	BlacklistEnabled bool          `envconfig:"BLACKLIST_ENABLED" default:"false"` // How many times a stream has to be wrong before blacklisting
+	BlacklistLimit   int           `envconfig:"BLACKLIST_LIMIT" default:"25"`      // How many times a stream has to be wrong before blacklisting
+	BlacklistTime    time.Duration `envconfig:"BLACKLIST_TIME" default:"1h"`       // Time period for blacklist to remove lements
 }
 
 // Process describes information regarding the transcoding process
 type Process struct {
-	CleanupEnabled bool          `envconfig:"CLEANUP_ENABLED" default:"true"` // Option to turn of cleanup
-	CleanupTime    time.Duration `envconfig:"CLEANUP_TIME" default:"2m0s"`    // Time period between process cleaning
-	StoreDir       string        `envconfig:"STORE_DIR" default:"./videos"`   // Directory to store / service video chunks
-	KeepFiles      bool          `envconfig:"KEEP_FILES" default:"false"`     // Option for not deleting files
-	Audio          bool          `envconfig:"AUDIO_ENABLED" default:"true"`   // Option for enabling audio
+	CleanupEnabled      bool          `envconfig:"CLEANUP_ENABLED" default:"false"`      // Option to turn of cleanup
+	ProcessCheckEnabled bool          `envconfig:"PROCESS_CHECK_ENABLED" default:"true"` // Option to turn off process checking
+	CleanupTime         time.Duration `envconfig:"CLEANUP_TIME" default:"2m0s"`          // Time period between process cleaning
+	ProcessCheckTime    time.Duration `envconfig:"PROCESS_CHECK_TIME" default:"1m0s"`    // Time period between process checking
+	StoreDir            string        `envconfig:"STORE_DIR" default:"./videos"`         // Directory to store / service video chunks
+	KeepFiles           bool          `envconfig:"KEEP_FILES" default:"false"`           // Option for not deleting files
+	Audio               bool          `envconfig:"AUDIO_ENABLED" default:"false"`        // Option for enabling audio
 }
 
 // Specification describes the application context settings
 type Specification struct {
-	Debug bool `envconfig:"DEBUG" default:"false"` // Indicates if debug log should be enabled or not
-	Port  int  `envconfig:"PORT" default:"8080"`   // Port that the application listens on
+	Debug bool `envconfig:"DEBUG" default:"true"` // Indicates if debug log should be enabled or not
+	Port  int  `envconfig:"PORT" default:"8080"`  // Port that the application listens on
 
 	CORS
 	Blacklist
@@ -73,9 +75,9 @@ type EndpointSetting struct {
 }
 
 type ListenSetting struct {
-	Enabled        bool          `yaml:"enabled"`
-	Uri    		   string 		 `yaml:"uri"`
-	Alias          string        `yaml:"alias"`
+	Enabled bool   `yaml:"enabled"`
+	Uri     string `yaml:"uri"`
+	Alias   string `yaml:"alias"`
 }
 
 // EndpointYML describes the yml structure used
@@ -87,7 +89,7 @@ type EndpointYML struct {
 		List   EndpointSetting `yaml:"list"`
 		Static EndpointSetting `yaml:"static"`
 	} `yaml:"endpoints"`
-	Listen [] ListenSetting `yaml:"listen"`
+	Listen []ListenSetting `yaml:"listen"`
 }
 
 // InitConfig is to initalise the config

@@ -10,8 +10,8 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 
-	"github.com/Roverr/rtsp-stream/core"
-	"github.com/Roverr/rtsp-stream/core/config"
+	"github.com/dblmok156/rtsp-stream/core"
+	"github.com/dblmok156/rtsp-stream/core/config"
 	"github.com/sirupsen/logrus"
 )
 

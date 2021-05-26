@@ -1,9 +1,9 @@
 ## Build server
 FROM golang:1.13-alpine AS build-backend
-ADD ./main.go /go/src/github.com/Roverr/rtsp-stream/main.go
-ADD ./core /go/src/github.com/Roverr/rtsp-stream/core
-ADD ./Gopkg.toml /go/src/github.com/Roverr/rtsp-stream/Gopkg.toml
-WORKDIR /go/src/github.com/Roverr/rtsp-stream
+ADD ./main.go /go/src/github.com/dblmok156/rtsp-stream/main.go
+ADD ./core /go/src/github.com/dblmok156/rtsp-stream/core
+ADD ./Gopkg.toml /go/src/github.com/dblmok156/rtsp-stream/Gopkg.toml
+WORKDIR /go/src/github.com/dblmok156/rtsp-stream
 RUN apk add --update --no-cache git
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN dep ensure -v
@@ -23,6 +23,6 @@ RUN apk update && apk add bash ca-certificates ffmpeg nodejs npm && rm -rf /var/
 RUN npm install http-server -g
 COPY ./build/management/supervisord.conf /etc/supervisord.conf
 WORKDIR /app
-COPY --from=build-backend /go/src/github.com/Roverr/rtsp-stream/server /app/
+COPY --from=build-backend /go/src/github.com/dblmok156/rtsp-stream/server /app/
 COPY ./build/rtsp-stream.yml /app/rtsp-stream.yml
 COPY --from=build-ui /tmp/ui/dist /ui/
