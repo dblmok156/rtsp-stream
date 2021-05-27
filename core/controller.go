@@ -61,9 +61,9 @@ type IController interface {
 	sendStart(w http.ResponseWriter, success bool, stream *streamer.Stream, alias string) // used by start to send out response
 	ListStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - GET /list
 	StartStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)       // handler - POST /start
-	StaticFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - GET /stream/{id}/{file}
-	StopStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - POST /stop
-	ExitPreHook() chan bool                                                               // runs before the application exits to clean up
+	//StaticFileHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)        // handler - GET /stream/{id}/{file}
+	StopStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) // handler - POST /stop
+	ExitPreHook() chan bool                                                        // runs before the application exits to clean up
 }
 
 // Controller holds all handler functions for the API
@@ -357,7 +357,7 @@ func (c *Controller) StopStreamHandler(w http.ResponseWriter, r *http.Request, p
 	w.WriteHeader(http.StatusOK)
 }
 
-func (c *Controller) startPreloadStream(Alias string, URI string) {
+/*func (c *Controller) startPreloadStream(Alias string, URI string) {
 	logrus.Debugf("%s is being initialized", URI)
 
 	_, knownStream := c.index[URI]
@@ -400,7 +400,7 @@ func (c *Controller) startPreloadStream(Alias string, URI string) {
 	delete(c.preload, Alias)
 
 	logrus.Infoln("started stream /stream/" + streamName + "/index.m3u8")
-}
+}*/
 
 // StartStreamHandler is an HTTP handler for the POST /start endpoint
 func (c *Controller) StartStreamHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -472,6 +472,7 @@ func (c *Controller) StartStreamHandler(w http.ResponseWriter, r *http.Request, 
 		}
 	} else {
 		c.blacklist.AddOrIncrease(dto.URI)
+		stream.Stop()
 	}
 	c.sendStart(w, stream.Running, stream, dto.Alias)
 }
@@ -493,7 +494,7 @@ func (c *Controller) shouldRedirectAlias(alias string, filepath string) (string,
 }
 
 // StaticFileHandler is HTTP handler for direct file requests
-func (c *Controller) StaticFileHandler(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+/*func (c *Controller) StaticFileHandler(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	if !c.isAuthenticated(req, "static") {
 		w.WriteHeader(http.StatusForbidden)
 		return
@@ -528,7 +529,7 @@ func (c *Controller) StaticFileHandler(w http.ResponseWriter, req *http.Request,
 	}
 	logrus.Debugf("%s is getting restarted via file requests | FileHandler", id)
 	stream.Restart().Wait()
-}
+}*/
 
 // ExitPreHook is a function that can recognise when the application is being closed
 // and cleans up all background running processes

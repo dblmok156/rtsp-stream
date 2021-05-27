@@ -57,8 +57,8 @@ type Process struct {
 
 // Specification describes the application context settings
 type Specification struct {
-	Debug bool `envconfig:"DEBUG" default:"true"` // Indicates if debug log should be enabled or not
-	Port  int  `envconfig:"PORT" default:"8080"`  // Port that the application listens on
+	Debug bool `envconfig:"DEBUG" default:"false"` // Indicates if debug log should be enabled or not
+	Port  int  `envconfig:"PORT" default:"8080"`   // Port that the application listens on
 
 	CORS
 	Blacklist

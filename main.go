@@ -32,10 +32,10 @@ func main() {
 		router.POST("/start", controllers.StartStreamHandler)
 		logrus.Infoln("start endpoint enabled | MainProcess")
 	}
-	if config.EndpointYML.Endpoints.Static.Enabled {
+	/*if config.EndpointYML.Endpoints.Static.Enabled {
 		router.GET("/stream/*filepath", controllers.StaticFileHandler)
 		logrus.Infoln("static endpoint enabled | MainProcess")
-	}
+	}*/
 	if config.EndpointYML.Endpoints.Stop.Enabled {
 		router.POST("/stop", controllers.StopStreamHandler)
 		logrus.Infoln("stop endpoint enabled | MainProcess")
